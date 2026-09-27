@@ -15,6 +15,7 @@
                     colors: {
                         navyPrimary: '#1B365D',
                         navyDark: '#0A192F',
+                        lightBlueGlow: '#38BDF8',
                         bgSoft: '#F1F5F9',
                         cardWhite: '#FFFFFF'
                     }
@@ -35,6 +36,23 @@
         }
         .step-active { animation: pulseGlow 1.5s infinite; background-color: #10B981 !important; color: white !important; }
         .step-done { background-color: #10B981 !important; color: white !important; }
+
+        /* Animation ព្រួញប្រដេញ និងពន្លឺប្រដេញ Navy Blue & Light Blue */
+        @keyframes arrowChase {
+            0% { opacity: 0.3; transform: translateX(-3px); }
+            50% { opacity: 1; color: #38BDF8; transform: translateX(3px); }
+            100% { opacity: 0.3; transform: translateX(-3px); }
+        }
+        .chase-arrow-1 { animation: arrowChase 1.2s infinite ease-in-out; }
+        .chase-arrow-2 { animation: arrowChase 1.2s infinite ease-in-out 0.3s; }
+        .chase-arrow-3 { animation: arrowChase 1.2s infinite ease-in-out 0.6s; }
+
+        @keyframes navyLightPulse {
+            0% { box-shadow: 0 0 0 0 rgba(27, 54, 93, 0.4); border-color: #1B365D; }
+            50% { box-shadow: 0 0 15px 4px rgba(56, 189, 248, 0.6); border-color: #38BDF8; }
+            100% { box-shadow: 0 0 0 0 rgba(27, 54, 93, 0.4); border-color: #1B365D; }
+        }
+        .slider-pulse-effect { animation: navyLightPulse 2s infinite; }
     </style>
 </head>
 <body class="font-sans text-slate-800 text-sm pb-28">
@@ -47,7 +65,7 @@
                     <i class="fa-solid fa-user-shield text-2xl text-navyPrimary"></i>
                 </div>
                 <h2 class="font-extrabold text-lg text-navyDark uppercase tracking-wider">Staff Login</h2>
-                <p class="text-xs text-slate-500 font-medium">Please verify your identity to proceed</p>
+                <p class="text-xs text-slate-500 font-medium">Please enter your name to proceed</p>
             </div>
             <div class="space-y-3 pt-2">
                 <div>
@@ -55,13 +73,6 @@
                     <div class="relative">
                         <input type="text" id="loginName" placeholder="Enter your name" class="w-full pl-9 pr-3 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-navyPrimary outline-none">
                         <i class="fa-regular fa-user absolute left-3 top-3.5 text-slate-400 text-sm"></i>
-                    </div>
-                </div>
-                <div>
-                    <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Phone Number *</label>
-                    <div class="relative">
-                        <input type="tel" id="loginPhone" placeholder="Enter phone number" class="w-full pl-9 pr-3 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-navyPrimary outline-none">
-                        <i class="fa-solid fa-phone absolute left-3 top-3.5 text-slate-400 text-sm"></i>
                     </div>
                 </div>
                 <button id="authBtn" class="w-full bg-navyPrimary hover:bg-navyDark text-white py-3.5 mt-2 rounded-xl text-sm font-extrabold uppercase tracking-wider shadow-md transition-all">
@@ -158,16 +169,21 @@
             </form>
         </div>
 
-        <!-- SLIDE TO CONFIRM FOOTER -->
+        <!-- SLIDE TO CONFIRM FOOTER (Navy & Light Blue Glow Pulse + Chasing Arrows) -->
         <div class="fixed bottom-0 left-0 w-full p-4 z-20 pointer-events-none">
             <div class="max-w-[430px] mx-auto bg-white/95 backdrop-blur-md border border-slate-200 p-2 shadow-2xl rounded-2xl pointer-events-auto">
-                <div id="sliderTrack" class="relative h-14 bg-slate-100 rounded-xl overflow-hidden border border-slate-200/80">
-                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <span id="sliderText" class="text-[11px] font-extrabold text-slate-400 tracking-widest uppercase transition-opacity duration-300">Slide to Submit <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i><i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                <div id="sliderTrack" class="relative h-14 bg-slate-100 rounded-xl overflow-hidden border-2 border-navyPrimary slider-pulse-effect">
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none space-x-1">
+                        <span id="sliderText" class="text-[11px] font-extrabold text-navyPrimary tracking-widest uppercase transition-opacity duration-300">Slide to Submit</span>
+                        <div class="flex space-x-0.5 ml-1">
+                            <i class="fa-solid fa-chevron-right text-[10px] text-navyPrimary chase-arrow-1"></i>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-lightBlueGlow chase-arrow-2"></i>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-navyPrimary chase-arrow-3"></i>
+                        </div>
                     </div>
-                    <div id="sliderFill" class="absolute top-0 left-0 bottom-0 bg-navyPrimary/10 w-0"></div>
+                    <div id="sliderFill" class="absolute top-0 left-0 bottom-0 bg-lightBlueGlow/20 w-0"></div>
                     <div id="sliderThumb" class="absolute top-1 left-1 bottom-1 w-16 bg-navyPrimary rounded-lg flex items-center justify-center cursor-pointer touch-none z-10 text-white shadow-md hover:bg-navyDark transition-colors">
-                        <i id="thumbIcon" class="fa-solid fa-angles-right text-lg"></i>
+                        <i id="thumbIcon" class="fa-solid fa-angles-right text-lg text-lightBlueGlow"></i>
                     </div>
                 </div>
             </div>
@@ -211,7 +227,6 @@
     </div>
 
     <script>
-        // --- 1. LOGIN & SESSION LOGIC ---
         const loginScreen = document.getElementById('loginScreen');
         const mainApp = document.getElementById('mainApp');
         const reportBy = document.getElementById('reportBy');
@@ -219,15 +234,13 @@
         
         function checkAuth() {
             const name = localStorage.getItem('fb_staffName');
-            const phone = localStorage.getItem('fb_staffPhone');
-            if (name && phone) {
+            if (name) {
                 loginScreen.classList.add('hidden');
                 mainApp.classList.remove('hidden');
-                reportBy.value = `${name} (${phone})`;
+                reportBy.value = name;
                 displayUser.innerText = `👤 ${name}`;
                 document.getElementById('businessDate').valueAsDate = new Date();
                 
-                // ពន្យាពេលបន្តិចធានាថា Slider គណនាតម្លៃត្រូវ
                 setTimeout(() => {
                     initSlider();
                 }, 150);
@@ -239,20 +252,17 @@
 
         document.getElementById('authBtn').addEventListener('click', () => {
             const n = document.getElementById('loginName').value.trim();
-            const p = document.getElementById('loginPhone').value.trim();
-            if (!n || !p) {
-                alert('Please enter both Name and Phone number!');
+            if (!n) {
+                alert('Please enter your Staff Name!');
                 return;
             }
             localStorage.setItem('fb_staffName', n);
-            localStorage.setItem('fb_staffPhone', p);
             checkAuth();
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             if(confirm("Are you sure you want to log out?")) {
                 localStorage.removeItem('fb_staffName');
-                localStorage.removeItem('fb_staffPhone');
                 document.getElementById('revenueForm').reset();
                 checkAuth();
             }
@@ -260,7 +270,6 @@
 
         checkAuth();
 
-        // --- 2. SLIDE TO CONFIRM LOGIC ---
         const track = document.getElementById('sliderTrack');
         const thumb = document.getElementById('sliderThumb');
         const fill = document.getElementById('sliderFill');
@@ -334,9 +343,8 @@
         document.addEventListener('touchmove', dragMove, {passive: false}); 
         document.addEventListener('touchend', endDrag);
 
-        // --- 3. SUBMISSION & FETCH API LOGIC ---
         function processSubmission() {
-            thumb.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg text-navyPrimary"></i>';
+            thumb.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg text-lightBlueGlow"></i>';
             thumb.classList.replace('bg-navyPrimary', 'bg-white');
             sliderText.innerText = "PROCESSING...";
             sliderText.style.opacity = '1';
@@ -357,7 +365,6 @@
             overlay.classList.remove('hidden');
             document.getElementById('step1Icon').classList.add('step-active');
             
-            // Apps Script Web App URL ចុងក្រោយរបស់អ្នក
             const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJdSxKCexW93rss-vonBY8Bfm_64i5IM7e4W9kKMMi_EGn2FA24JdhJjkfxlHpWBmO/exec";
 
             fetch(WEB_APP_URL, {
@@ -384,11 +391,11 @@
                         
                         document.getElementById('loadingTitle').innerText = "SUCCESSFUL!";
                         document.getElementById('loadingTitle').classList.replace('text-navyDark', 'text-emerald-500');
-                        document.getElementById('loadingSub').innerText = "Report submitted securely.";
+                        document.getElementById('loadingSub').innerText = "Report submitted securely. Refreshing in 5s...";
 
                         setTimeout(() => {
                             window.location.reload();
-                        }, 2000);
+                        }, 5000);
                     }, 1200);
                 } else {
                     throw new Error(result.message);
