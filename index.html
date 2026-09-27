@@ -330,7 +330,7 @@
         document.addEventListener('touchmove', dragMove, {passive: false}); 
         document.addEventListener('touchend', endDrag);
 
-        // --- 3. SUBMISSION & LOADING OVERLAY LOGIC ---
+        // --- 3. SUBMISSION & FETCH API LOGIC ---
         function processSubmission() {
             thumb.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg text-navyPrimary"></i>';
             thumb.classList.replace('bg-navyPrimary', 'bg-white');
@@ -351,12 +351,19 @@
 
             const overlay = document.getElementById('loadingOverlay');
             overlay.classList.remove('hidden');
-
             document.getElementById('step1Icon').classList.add('step-active');
             
-            // Call Google Script
-            google.script.run
-                .withSuccessHandler(function(response) {
+            // Apps Script Web App URL ចុងក្រោយបង្អស់
+            const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJdSxKCexW93rss-vonBY8Bfm_64i5IM7e4W9kKMMi_EGn2FA24JdhJjkfxlHpWBmO/exec";
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if(result.status === 'success') {
                     document.getElementById('step1Icon').classList.replace('step-active', 'step-done');
                     document.getElementById('step1Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
                     
@@ -379,12 +386,14 @@
                             window.location.reload();
                         }, 2000);
                     }, 1200);
-                })
-                .withFailureHandler(function(error) {
-                    alert("Error: " + error.message);
-                    window.location.reload(); 
-                })
-                .processForm(data); 
+                } else {
+                    throw new Error(result.message);
+                }
+            })
+            .catch(error => {
+                alert("Error: " + error.message);
+                window.location.reload(); 
+            });
         }
     </script>
 </body>
