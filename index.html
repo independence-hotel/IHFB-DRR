@@ -31,14 +31,11 @@
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-slide-up { animation: slideUp 0.4s ease forwards; }
 
-        /* Step Active Pulse (Navy & Light Blue Glow) */
         @keyframes navyLightPulse {
             0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(27, 54, 93, 0.5), 0 0 0 0 rgba(56, 189, 248, 0.4); background-color: #1B365D; color: #38BDF8; }
             50% { transform: scale(1.15); box-shadow: 0 0 15px 6px rgba(56, 189, 248, 0.7); background-color: #0A192F; color: #38BDF8; }
         }
         .step-active { animation: navyLightPulse 1.2s infinite ease-in-out; border-color: #38BDF8 !important; }
-        
-        /* Completed Green Tick Style */
         .step-done { background-color: #10B981 !important; color: white !important; border-color: #059669 !important; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
 
         @keyframes arrowChase {
@@ -128,19 +125,19 @@
                                 <input type="number" step="0.01" id="totalFbRevenue" placeholder="0.00" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary focus:outline-none focus:ring-1 focus:ring-navyPrimary">
                             </div>
                             <div>
-                                <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Total Pax *</label>
-                                <input type="number" step="1" min="0" id="totalPax" placeholder="0" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary focus:outline-none focus:ring-1 focus:ring-navyPrimary">
+                                <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Total Pax * <span id="errPax" class="text-red-500 text-[10px] hidden font-bold">⚠️ Integer only</span></label>
+                                <input type="number" step="1" id="totalPax" placeholder="0" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary focus:outline-none focus:ring-1 focus:ring-navyPrimary">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-2.5 bg-blue-50/70 p-2.5 rounded-lg border border-blue-200">
                             <div>
-                                <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Day Pass Adult</label>
-                                <input type="number" step="1" min="0" id="dayPassAdult" placeholder="0" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary">
+                                <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Day Pass Adult <span id="errAdult" class="text-red-500 text-[10px] hidden font-bold">⚠️ Integer</span></label>
+                                <input type="number" step="1" id="dayPassAdult" placeholder="0" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary">
                             </div>
                             <div>
-                                <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Day Pass Child</label>
-                                <input type="number" step="1" min="0" id="dayPassChild" placeholder="0" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary">
+                                <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Day Pass Child <span id="errChild" class="text-red-500 text-[10px] hidden font-bold">⚠️ Integer</span></label>
+                                <input type="number" step="1" id="dayPassChild" placeholder="0" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary">
                             </div>
                         </div>
 
@@ -338,11 +335,52 @@
         }
         window.addEventListener('resize', initSlider);
 
+        // --- VALIDATION CHECKER ---
+        function validateInputs() {
+            const pax = document.getElementById('totalPax').value;
+            const adult = document.getElementById('dayPassAdult').value;
+            const child = document.getElementById('dayPassChild').value;
+
+            let hasError = false;
+
+            // Check Total Pax (Must be integer >= 0)
+            if (pax !== "" && (isNaN(pax) || !Number.isInteger(Number(pax)) || Number(pax) < 0)) {
+                document.getElementById('errPax').classList.remove('hidden');
+                hasError = true;
+            } else {
+                document.getElementById('errPax').classList.add('hidden');
+            }
+
+            // Check Day Pass Adult
+            if (adult !== "" && (isNaN(adult) || !Number.isInteger(Number(adult)) || Number(adult) < 0)) {
+                document.getElementById('errAdult').classList.remove('hidden');
+                hasError = true;
+            } else {
+                document.getElementById('errAdult').classList.add('hidden');
+            }
+
+            // Check Day Pass Child
+            if (child !== "" && (isNaN(child) || !Number.isInteger(Number(child)) || Number(child) < 0)) {
+                document.getElementById('errChild').classList.remove('hidden');
+                hasError = true;
+            } else {
+                document.getElementById('errChild').classList.add('hidden');
+            }
+
+            return !hasError;
+        }
+
         function startDrag(e) {
             if (isSubmitted) return;
             const form = document.getElementById('revenueForm');
             if (!form.checkValidity()) {
                 form.reportValidity();
+                return;
+            }
+
+            // Validate integers for Pax & Day Pass
+            if (!validateInputs()) {
+                alert("⚠️ Please enter whole numbers (integer only) for Total Pax and Day Pass fields. No decimals allowed!");
                 return;
             }
             
@@ -456,7 +494,6 @@
             .then(response => response.json())
             .then(result => {
                 if(result.status === 'success') {
-                    // Step 1 Completed
                     document.getElementById('step1Icon').classList.replace('step-active', 'step-done');
                     document.getElementById('step1Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
                     
@@ -465,16 +502,13 @@
                     document.getElementById('loadingSub').innerText = "Updating Database & Telegram...";
 
                     setTimeout(() => {
-                        // Step 2 Completed
                         document.getElementById('step2Icon').classList.replace('step-active', 'step-done');
                         document.getElementById('step2Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
                         
                         document.getElementById('progressLine').style.width = '100%';
-                        // Step 3 Active (Navy & Light Blue Pulse)
                         document.getElementById('step3Icon').classList.add('step-active');
                         
                         setTimeout(() => {
-                            // Step 3 Completed (Green Tick)
                             document.getElementById('step3Icon').classList.replace('step-active', 'step-done');
                             document.getElementById('step3Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
 
