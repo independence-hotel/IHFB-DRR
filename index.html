@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Food & Beverage Daily Revenue Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        navyPrimary: '#1B365D',
+                        navyDark: '#0A192F',
+                        bgSoft: '#F1F5F9',
+                        cardWhite: '#FFFFFF'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { -webkit-tap-highlight-color: transparent; background-color: #e2e8f0; }
+        .app-container { max-width: 430px; margin: 0 auto; min-height: 100vh; background-color: #F8FAFC; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); position: relative; }
+        .btn-press:active { transform: scale(0.95); transition: transform 0.12s ease; }
+    </style>
+</head>
+<body class="font-sans pb-28 text-slate-800 text-sm">
+
+    <div class="app-container flex flex-col justify-between">
+        <div>
+            <!-- Header -->
+            <div class="bg-navyPrimary text-center py-4 px-3 shadow-md rounded-b-2xl mb-3 relative overflow-hidden">
+                <h1 class="text-white text-sm font-extrabold tracking-widest uppercase">INDEPENDENCE HOTEL BY DARA</h1>
+                <p class="text-slate-300 text-xs mt-0.5 font-semibold tracking-wider">F&B DAILY REVENUE REPORT</p>
+            </div>
+
+            <form id="revenueForm" class="px-3 space-y-3">
+                <!-- Outlet & Data Card -->
+                <div class="bg-cardWhite p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                    <div class="flex items-center space-x-1.5 border-b border-slate-100 pb-2">
+                        <i class="fa-solid fa-store text-navyPrimary text-xs"></i>
+                        <h2 class="font-bold text-navyPrimary text-xs uppercase">Outlet & Revenue Info</h2>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Outlet *</label>
+                            <select id="outlet" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                                <option value="">Select Outlet...</option>
+                                <option value="CORAL RESTAURANT">CORAL RESTAURANT</option>
+                                <option value="SUNSET RESTAURANT">SUNSET RESTAURANT</option>
+                                <option value="BEACH BAR">BEACH BAR</option>
+                                <option value="OCEAN POOL">OCEAN POOL</option>
+                                <option value="HISTORY BAR">HISTORY BAR</option>
+                                <option value="ROOM SERVICE">ROOM SERVICE</option>
+                                <option value="MINI BAR">MINI BAR</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Total F&B Revenue ($) *</label>
+                                <input type="number" step="0.01" id="totalFbRevenue" placeholder="0.00" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Total Pax *</label>
+                                <input type="number" id="totalPax" placeholder="0" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                            </div>
+                        </div>
+
+                        <!-- 2 Taps [Day Pass Adult] [Day Pass Child] -->
+                        <div class="grid grid-cols-2 gap-2.5 bg-blue-50/50 p-2.5 rounded-lg border border-blue-100">
+                            <div>
+                                <label class="text-[11px] text-navyPrimary font-bold uppercase tracking-wider mb-1 block">[Day Pass Adult]</label>
+                                <input type="number" id="dayPassAdult" placeholder="0" value="0" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-navyPrimary font-bold uppercase tracking-wider mb-1 block">[Day Pass Child]</label>
+                                <input type="number" id="dayPassChild" placeholder="0" value="0" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Other Promotions</label>
+                            <input type="text" id="otherPromotions" placeholder="e.g. Happy hour cocktail" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                        </div>
+
+                        <div>
+                            <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">General Operation Notices</label>
+                            <textarea id="generalNotices" rows="2" placeholder="Notes or remarks..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Reported By *</label>
+                                <input type="text" id="reportBy" placeholder="Staff Name" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Business Date *</label>
+                                <input type="date" id="businessDate" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sticky Footer Button Submit Report -->
+        <div class="fixed bottom-0 left-0 w-full bg-transparent p-3 z-20 pointer-events-none">
+            <div class="max-w-[430px] mx-auto bg-white/95 backdrop-blur-md border border-slate-200 p-3 shadow-2xl rounded-2xl pointer-events-auto">
+                <button type="button" id="submitBtn" class="w-full bg-navyPrimary hover:bg-navyDark text-white py-3.5 rounded-xl text-sm font-extrabold uppercase tracking-wider shadow-md transition-all btn-press flex items-center justify-center space-x-2">
+                    <span>Submit Report</span>
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('businessDate').valueAsDate = new Date();
+
+        if (localStorage.getItem('fb_reportBy')) {
+            document.getElementById('reportBy').value = localStorage.getItem('fb_reportBy');
+        }
+        document.getElementById('reportBy').addEventListener('input', function() {
+            localStorage.setItem('fb_reportBy', this.value);
+        });
+
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const form = document.getElementById('revenueForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const data = {
+                outlet: document.getElementById('outlet').value,
+                totalFbRevenue: document.getElementById('totalFbRevenue').value,
+                totalPax: document.getElementById('totalPax').value,
+                dayPassAdult: document.getElementById('dayPassAdult').value || 0,
+                dayPassChild: document.getElementById('dayPassChild').value || 0,
+                otherPromotions: document.getElementById('otherPromotions').value || "-",
+                generalNotices: document.getElementById('generalNotices').value || "-",
+                reportBy: document.getElementById('reportBy').value,
+                businessDate: document.getElementById('businessDate').value
+            };
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting...`;
+
+            google.script.run
+                .withSuccessHandler(function(response) {
+                    alert("Report submitted successfully!");
+                    window.location.reload();
+                })
+                .withFailureHandler(function(error) {
+                    alert("Error: " + error.message);
+                    btn.disabled = false;
+                    btn.innerHTML = `<span>Submit Report</span> <i class="fa-solid fa-paper-plane text-xs"></i>`;
+                })
+                .doPost({ postData: { contents: JSON.stringify(data) } });
+        });
+    </script>
+</body>
+</html>
