@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Food & Beverage Daily Revenue Report</title>
+    <title>F&B Daily Revenue Report</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,33 +23,85 @@
         }
     </script>
     <style>
-        body { -webkit-tap-highlight-color: transparent; background-color: #e2e8f0; }
-        .app-container { max-width: 430px; margin: 0 auto; min-height: 100vh; background-color: #F8FAFC; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); position: relative; }
-        .btn-press:active { transform: scale(0.95); transition: transform 0.12s ease; }
+        body { -webkit-tap-highlight-color: transparent; background-color: #e2e8f0; overscroll-behavior-y: none; }
+        .app-container { max-width: 430px; margin: 0 auto; min-height: 100vh; background-color: #F8FAFC; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); position: relative; overflow-x: hidden;}
+        /* Slide Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fade { animation: fadeIn 0.3s ease forwards; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-slide-up { animation: slideUp 0.4s ease forwards; }
+        /* Pulse for step processing */
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { transform: scale(1.1); box-shadow: 0 0 10px 4px rgba(16, 185, 129, 0.2); }
+        }
+        .step-active { animation: pulseGlow 1.5s infinite; background-color: #10B981 !important; color: white !important; }
+        .step-done { background-color: #10B981 !important; color: white !important; }
     </style>
 </head>
-<body class="font-sans pb-28 text-slate-800 text-sm">
+<body class="font-sans text-slate-800 text-sm pb-28">
 
-    <div class="app-container flex flex-col justify-between">
+    <!-- 1. LOGIN SCREEN (OVERLAY) -->
+    <div id="loginScreen" class="fixed inset-0 bg-slate-900 z-[100] flex flex-col items-center justify-center p-5 hidden animate-fade">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-7 shadow-2xl space-y-5 animate-slide-up">
+            <div class="text-center space-y-1">
+                <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-user-shield text-2xl text-navyPrimary"></i>
+                </div>
+                <h2 class="font-extrabold text-lg text-navyDark uppercase tracking-wider">Staff Login</h2>
+                <p class="text-xs text-slate-500 font-medium">Please verify your identity to proceed</p>
+            </div>
+            <div class="space-y-3 pt-2">
+                <div>
+                    <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Staff Name *</label>
+                    <div class="relative">
+                        <input type="text" id="loginName" placeholder="Enter your name" class="w-full pl-9 pr-3 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-navyPrimary outline-none">
+                        <i class="fa-regular fa-user absolute left-3 top-3.5 text-slate-400 text-sm"></i>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Phone Number *</label>
+                    <div class="relative">
+                        <input type="tel" id="loginPhone" placeholder="Enter phone number" class="w-full pl-9 pr-3 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-navyPrimary outline-none">
+                        <i class="fa-solid fa-phone absolute left-3 top-3.5 text-slate-400 text-sm"></i>
+                    </div>
+                </div>
+                <button id="authBtn" class="w-full bg-navyPrimary hover:bg-navyDark text-white py-3.5 mt-2 rounded-xl text-sm font-extrabold uppercase tracking-wider shadow-md transition-all">
+                    Access Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="mainApp" class="app-container flex flex-col justify-between hidden">
         <div>
-            <!-- Header -->
-            <div class="bg-navyPrimary text-center py-4 px-3 shadow-md rounded-b-2xl mb-3 relative overflow-hidden">
-                <h1 class="text-white text-sm font-extrabold tracking-widest uppercase">INDEPENDENCE HOTEL BY DARA</h1>
-                <p class="text-slate-300 text-xs mt-0.5 font-semibold tracking-wider">F&B DAILY REVENUE REPORT</p>
+            <!-- Header (with Logout Button) -->
+            <div class="bg-navyPrimary text-center py-4 px-3 shadow-md rounded-b-2xl mb-3 relative overflow-hidden flex items-center justify-between">
+                <div class="w-8"></div> <!-- Spacer for center alignment -->
+                <div>
+                    <h1 class="text-white text-[13px] font-extrabold tracking-widest uppercase">INDEPENDENCE HOTEL</h1>
+                    <p class="text-slate-300 text-[10px] mt-0.5 font-semibold tracking-wider">F&B DAILY REVENUE</p>
+                </div>
+                <button id="logoutBtn" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+                    <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                </button>
             </div>
 
-            <form id="revenueForm" class="px-3 space-y-3">
-                <!-- Outlet & Data Card -->
+            <form id="revenueForm" class="px-3 space-y-3 mt-1">
                 <div class="bg-cardWhite p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
-                    <div class="flex items-center space-x-1.5 border-b border-slate-100 pb-2">
-                        <i class="fa-solid fa-store text-navyPrimary text-xs"></i>
-                        <h2 class="font-bold text-navyPrimary text-xs uppercase">Outlet & Revenue Info</h2>
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <div class="flex items-center space-x-1.5">
+                            <i class="fa-solid fa-file-invoice-dollar text-navyPrimary text-xs"></i>
+                            <h2 class="font-bold text-navyPrimary text-xs uppercase">Report Data</h2>
+                        </div>
+                        <span id="displayUser" class="text-[10px] font-bold text-slate-400"></span>
                     </div>
 
                     <div class="space-y-3">
                         <div>
                             <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Outlet *</label>
-                            <select id="outlet" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                            <select id="outlet" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-navyPrimary">
                                 <option value="">Select Outlet...</option>
                                 <option value="CORAL RESTAURANT">CORAL RESTAURANT</option>
                                 <option value="SUNSET RESTAURANT">SUNSET RESTAURANT</option>
@@ -63,41 +115,40 @@
 
                         <div class="grid grid-cols-2 gap-2.5">
                             <div>
-                                <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Total F&B Revenue ($) *</label>
-                                <input type="number" step="0.01" id="totalFbRevenue" placeholder="0.00" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                                <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Revenue ($) *</label>
+                                <input type="number" step="0.01" id="totalFbRevenue" placeholder="0.00" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-navyPrimary">
                             </div>
                             <div>
                                 <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Total Pax *</label>
-                                <input type="number" id="totalPax" placeholder="0" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                                <input type="number" id="totalPax" placeholder="0" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-navyPrimary">
                             </div>
                         </div>
 
-                        <!-- 2 Taps [Day Pass Adult] [Day Pass Child] -->
                         <div class="grid grid-cols-2 gap-2.5 bg-blue-50/50 p-2.5 rounded-lg border border-blue-100">
                             <div>
                                 <label class="text-[11px] text-navyPrimary font-bold uppercase tracking-wider mb-1 block">[Day Pass Adult]</label>
-                                <input type="number" id="dayPassAdult" placeholder="0" value="0" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                                <input type="number" id="dayPassAdult" placeholder="0" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
                             </div>
                             <div>
                                 <label class="text-[11px] text-navyPrimary font-bold uppercase tracking-wider mb-1 block">[Day Pass Child]</label>
-                                <input type="number" id="dayPassChild" placeholder="0" value="0" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                                <input type="number" id="dayPassChild" placeholder="0" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
                             </div>
                         </div>
 
                         <div>
                             <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Other Promotions</label>
-                            <input type="text" id="otherPromotions" placeholder="e.g. Happy hour cocktail" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                            <input type="text" id="otherPromotions" placeholder="e.g. Happy hour" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-navyPrimary">
                         </div>
 
                         <div>
-                            <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">General Operation Notices</label>
-                            <textarea id="generalNotices" rows="2" placeholder="Notes or remarks..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700"></textarea>
+                            <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">General Notices</label>
+                            <textarea id="generalNotices" rows="2" placeholder="Notes or remarks..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-navyPrimary"></textarea>
                         </div>
 
                         <div class="grid grid-cols-2 gap-2.5">
                             <div>
-                                <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Reported By *</label>
-                                <input type="text" id="reportBy" placeholder="Staff Name" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700">
+                                <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Reported By</label>
+                                <input type="text" id="reportBy" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-500 select-none">
                             </div>
                             <div>
                                 <label class="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1 block">Business Date *</label>
@@ -109,34 +160,202 @@
             </form>
         </div>
 
-        <!-- Sticky Footer Button Submit Report -->
-        <div class="fixed bottom-0 left-0 w-full bg-transparent p-3 z-20 pointer-events-none">
-            <div class="max-w-[430px] mx-auto bg-white/95 backdrop-blur-md border border-slate-200 p-3 shadow-2xl rounded-2xl pointer-events-auto">
-                <button type="button" id="submitBtn" class="w-full bg-navyPrimary hover:bg-navyDark text-white py-3.5 rounded-xl text-sm font-extrabold uppercase tracking-wider shadow-md transition-all btn-press flex items-center justify-center space-x-2">
-                    <span>Submit Report</span>
-                    <i class="fa-solid fa-paper-plane text-xs"></i>
-                </button>
+        <!-- 3. SLIDE TO CONFIRM FOOTER -->
+        <div class="fixed bottom-0 left-0 w-full p-4 z-20 pointer-events-none">
+            <div class="max-w-[430px] mx-auto bg-white/95 backdrop-blur-md border border-slate-200 p-2 shadow-2xl rounded-2xl pointer-events-auto">
+                <div id="sliderTrack" class="relative h-14 bg-slate-100 rounded-xl overflow-hidden border border-slate-200/80">
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <span id="sliderText" class="text-[11px] font-extrabold text-slate-400 tracking-widest uppercase transition-opacity duration-300">Slide to Submit <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i><i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                    </div>
+                    <!-- Slider Fill -->
+                    <div id="sliderFill" class="absolute top-0 left-0 bottom-0 bg-navyPrimary/10 w-0"></div>
+                    <!-- Slider Thumb -->
+                    <div id="sliderThumb" class="absolute top-1 left-1 bottom-1 w-16 bg-navyPrimary rounded-lg flex items-center justify-center cursor-pointer touch-none z-10 text-white shadow-md hover:bg-navyDark transition-colors">
+                        <i id="thumbIcon" class="fa-solid fa-angles-right text-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. LOADING OVERLAY (3 STEPS) -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[110] flex items-center justify-center p-5 hidden animate-fade">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl text-center space-y-6">
+            <div>
+                <h3 id="loadingTitle" class="font-extrabold text-sm text-navyDark uppercase tracking-wider mb-1">Processing Request</h3>
+                <p id="loadingSub" class="text-xs text-slate-500 font-medium">Please do not close the app...</p>
+            </div>
+            
+            <!-- Progress Tracker -->
+            <div class="relative px-2">
+                <!-- Background Line -->
+                <div class="absolute top-3.5 left-8 right-8 h-1 bg-slate-100 rounded-full -z-10"></div>
+                <!-- Animated Fill Line -->
+                <div id="progressLine" class="absolute top-3.5 left-8 h-1 bg-emerald-500 rounded-full -z-10 w-0 transition-all duration-700 ease-in-out"></div>
+                
+                <div class="flex items-center justify-between">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col items-center">
+                        <div id="step1Icon" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xs transition-all duration-300 border-2 border-white shadow-sm">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </div>
+                        <span class="text-[10px] mt-2 font-bold text-slate-500">Sent</span>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="flex flex-col items-center">
+                        <div id="step2Icon" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xs transition-all duration-300 border-2 border-white shadow-sm">
+                            <i class="fa-solid fa-gears"></i>
+                        </div>
+                        <span class="text-[10px] mt-2 font-bold text-slate-500">Processed</span>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="flex flex-col items-center">
+                        <div id="step3Icon" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xs transition-all duration-300 border-2 border-white shadow-sm">
+                            <i class="fa-solid fa-check-double"></i>
+                        </div>
+                        <span class="text-[10px] mt-2 font-bold text-slate-500">Completed</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('businessDate').valueAsDate = new Date();
-
-        if (localStorage.getItem('fb_reportBy')) {
-            document.getElementById('reportBy').value = localStorage.getItem('fb_reportBy');
+        // --- 1. LOGIN & SESSION LOGIC ---
+        const loginScreen = document.getElementById('loginScreen');
+        const mainApp = document.getElementById('mainApp');
+        const reportBy = document.getElementById('reportBy');
+        const displayUser = document.getElementById('displayUser');
+        
+        function checkAuth() {
+            const name = localStorage.getItem('fb_staffName');
+            const phone = localStorage.getItem('fb_staffPhone');
+            if (name && phone) {
+                loginScreen.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                reportBy.value = `${name} (${phone})`; // Auto-fill
+                displayUser.innerText = `👤 ${name}`;
+                document.getElementById('businessDate').valueAsDate = new Date();
+                initSlider(); // Recalculate slider width when app shows
+            } else {
+                loginScreen.classList.remove('hidden');
+                mainApp.classList.add('hidden');
+            }
         }
-        document.getElementById('reportBy').addEventListener('input', function() {
-            localStorage.setItem('fb_reportBy', this.value);
+
+        document.getElementById('authBtn').addEventListener('click', () => {
+            const n = document.getElementById('loginName').value.trim();
+            const p = document.getElementById('loginPhone').value.trim();
+            if (!n || !p) {
+                alert('Please enter both Name and Phone number!');
+                return;
+            }
+            localStorage.setItem('fb_staffName', n);
+            localStorage.setItem('fb_staffPhone', p);
+            checkAuth();
         });
 
-        document.getElementById('submitBtn').addEventListener('click', function() {
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            if(confirm("Are you sure you want to log out?")) {
+                localStorage.removeItem('fb_staffName');
+                localStorage.removeItem('fb_staffPhone');
+                document.getElementById('revenueForm').reset();
+                checkAuth();
+            }
+        });
+
+        // Initialize Auth
+        checkAuth();
+
+
+        // --- 2. SLIDE TO CONFIRM LOGIC ---
+        const track = document.getElementById('sliderTrack');
+        const thumb = document.getElementById('sliderThumb');
+        const fill = document.getElementById('sliderFill');
+        const sliderText = document.getElementById('sliderText');
+        
+        let isDragging = false;
+        let startX = 0;
+        let maxSlide = 0;
+        let isSubmitted = false;
+
+        function initSlider() {
+            maxSlide = track.offsetWidth - thumb.offsetWidth - 8; // 8px for margins
+        }
+        window.addEventListener('resize', initSlider);
+
+        function startDrag(e) {
+            if (isSubmitted) return;
+            // Validate form before allowing slide
             const form = document.getElementById('revenueForm');
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
             }
+            
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            thumb.style.transition = 'none';
+            fill.style.transition = 'none';
+            sliderText.style.opacity = '0.2';
+        }
 
+        function dragMove(e) {
+            if (!isDragging || isSubmitted) return;
+            
+            if (e.type.includes('touch')) {
+                // Prevent scrolling while sliding on mobile
+                e.preventDefault(); 
+            }
+
+            let currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            let walk = currentX - startX;
+            
+            if (walk < 0) walk = 0;
+            if (walk > maxSlide) walk = maxSlide;
+
+            thumb.style.transform = `translateX(${walk}px)`;
+            fill.style.width = `${walk + (thumb.offsetWidth/2)}px`;
+
+            // If slided all the way to the right
+            if (walk >= maxSlide - 2) {
+                isDragging = false;
+                isSubmitted = true;
+                processSubmission(); // Trigger submit
+            }
+        }
+
+        function endDrag() {
+            if (!isDragging || isSubmitted) return;
+            isDragging = false;
+            // Snap back to start
+            thumb.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            fill.style.transition = 'width 0.3s ease';
+            thumb.style.transform = `translateX(0px)`;
+            fill.style.width = `0px`;
+            sliderText.style.opacity = '1';
+        }
+
+        // Mouse Events
+        thumb.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', dragMove);
+        document.addEventListener('mouseup', endDrag);
+
+        // Touch Events
+        thumb.addEventListener('touchstart', startDrag, {passive: true});
+        document.addEventListener('touchmove', dragMove, {passive: false}); 
+        document.addEventListener('touchend', endDrag);
+
+
+        // --- 3. SUBMISSION & LOADING OVERLAY LOGIC ---
+        function processSubmission() {
+            // Change Slider UI to locked/success state
+            thumb.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg text-navyPrimary"></i>';
+            thumb.classList.replace('bg-navyPrimary', 'bg-white');
+            sliderText.innerText = "PROCESSING...";
+            sliderText.style.opacity = '1';
+
+            // Gather Data
             const data = {
                 outlet: document.getElementById('outlet').value,
                 totalFbRevenue: document.getElementById('totalFbRevenue').value,
@@ -145,26 +364,54 @@
                 dayPassChild: document.getElementById('dayPassChild').value || 0,
                 otherPromotions: document.getElementById('otherPromotions').value || "-",
                 generalNotices: document.getElementById('generalNotices').value || "-",
-                reportBy: document.getElementById('reportBy').value,
+                reportBy: document.getElementById('reportBy').value, // Used auto-filled value
                 businessDate: document.getElementById('businessDate').value
             };
 
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting...`;
+            // Show Overlay
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.classList.remove('hidden');
 
+            // --- ANIMATION SEQUENCE ---
+            // Step 1: Sent (0ms)
+            document.getElementById('step1Icon').classList.add('step-active');
+            
+            // Call Google Script
             google.script.run
                 .withSuccessHandler(function(response) {
-                    alert("Report submitted successfully!");
-                    window.location.reload();
+                    // Step 1 Done, Step 2 Active
+                    document.getElementById('step1Icon').classList.replace('step-active', 'step-done');
+                    document.getElementById('step1Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
+                    
+                    document.getElementById('progressLine').style.width = '50%';
+                    document.getElementById('step2Icon').classList.add('step-active');
+                    document.getElementById('loadingSub').innerText = "Updating Database & Telegram...";
+
+                    // Fake delay to show Step 2 UI gracefully
+                    setTimeout(() => {
+                        // Step 2 Done, Step 3 Active (Completed)
+                        document.getElementById('step2Icon').classList.replace('step-active', 'step-done');
+                        document.getElementById('step2Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
+                        
+                        document.getElementById('progressLine').style.width = '100%';
+                        document.getElementById('step3Icon').classList.add('step-done');
+                        
+                        document.getElementById('loadingTitle').innerText = "SUCCESSFUL!";
+                        document.getElementById('loadingTitle').classList.replace('text-navyDark', 'text-emerald-500');
+                        document.getElementById('loadingSub').innerText = "Report submitted securely.";
+
+                        // Refresh App
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    }, 1200);
                 })
                 .withFailureHandler(function(error) {
                     alert("Error: " + error.message);
-                    btn.disabled = false;
-                    btn.innerHTML = `<span>Submit Report</span> <i class="fa-solid fa-paper-plane text-xs"></i>`;
+                    window.location.reload(); // Reset on error
                 })
-                .doPost({ postData: { contents: JSON.stringify(data) } });
-        });
+                .processForm(data); // Hitting the backend processForm
+        }
     </script>
 </body>
 </html>
