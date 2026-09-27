@@ -160,7 +160,7 @@
                             </div>
                             <div>
                                 <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Business Date *</label>
-                                <input type="date" id="businessDate" readonly required class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary cursor-not-allowed select-none">
+                                <input type="date" id="businessDate" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary focus:outline-none focus:ring-1 focus:ring-navyPrimary">
                             </div>
                         </div>
                     </div>
@@ -239,7 +239,7 @@
                 reportBy.value = name;
                 displayUser.innerText = `👤 ${name}`;
                 
-                // កំណត់ Business Date ឱ្យស្មើនឹងថ្ងៃខែបច្ចុប្បន្នជានិច្ច
+                // កំណត់ Business Date ឱ្យលោតថ្ងៃនេះ (Today) ស្វ័យប្រវត្តិពេលបើកដំបូង ប៉ុន្តែអនុញ្ញាតឱ្យចុចប្តូរថ្ងៃក្រោយបាន
                 const today = new Date().toISOString().split('T')[0];
                 document.getElementById('businessDate').value = today;
                 
