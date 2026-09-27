@@ -111,13 +111,15 @@
                             <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Outlet *</label>
                             <select id="outlet" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary focus:outline-none focus:ring-1 focus:ring-navyPrimary">
                                 <option value="">Select Outlet...</option>
-                                <option value="CORAL RESTAURANT">CORAL RESTAURANT</option>
-                                <option value="SUNSET RESTAURANT">SUNSET RESTAURANT</option>
                                 <option value="BEACH BAR">BEACH BAR</option>
-                                <option value="OCEAN POOL">OCEAN POOL</option>
+                                <option value="BANQUET">BANQUET</option>
+                                <option value="CORAL RESTAURANT">CORAL RESTAURANT</option>
                                 <option value="HISTORY BAR">HISTORY BAR</option>
-                                <option value="ROOM SERVICE">ROOM SERVICE</option>
                                 <option value="MINI BAR">MINI BAR</option>
+                                <option value="OCEAN POOL">OCEAN POOL</option>
+                                <option value="ROOM SERVICE">ROOM SERVICE</option>
+                                <option value="SKY POOL BAR">SKY POOL BAR</option>
+                                <option value="SUNSET RESTAURANT">SUNSET RESTAURANT</option>
                             </select>
                         </div>
 
@@ -239,7 +241,6 @@
                 reportBy.value = name;
                 displayUser.innerText = `👤 ${name}`;
                 
-                // កំណត់ Business Date ឱ្យលោតថ្ងៃនេះ (Today) ស្វ័យប្រវត្តិពេលបើកដំបូង ប៉ុន្តែអនុញ្ញាតឱ្យចុចប្តូរថ្ងៃក្រោយបាន
                 const today = new Date().toISOString().split('T')[0];
                 document.getElementById('businessDate').value = today;
                 
@@ -393,7 +394,7 @@
                         
                         document.getElementById('loadingTitle').innerText = "SUCCESSFUL!";
                         document.getElementById('loadingTitle').classList.replace('text-navyDark', 'text-emerald-500');
-                        document.getElementById('loadingSub').innerText = "Report submitted securely. Refreshing in 5s...";
+                        document.getElementById('loadingSub').innerText = "Report submitted securely. Refreshing in 5s.";
 
                         setTimeout(() => {
                             window.location.reload();
