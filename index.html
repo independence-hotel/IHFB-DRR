@@ -41,7 +41,7 @@
 </head>
 <body class="font-sans text-slate-800 text-sm pb-28">
 
-    <!-- 1. LOGIN SCREEN (OVERLAY) -->
+    <!-- 1. LOGIN SCREEN -->
     <div id="loginScreen" class="fixed inset-0 bg-slate-900 z-[100] flex flex-col items-center justify-center p-5 hidden animate-fade">
         <div class="bg-white rounded-2xl w-full max-w-sm p-7 shadow-2xl space-y-5 animate-slide-up">
             <div class="text-center space-y-1">
@@ -76,9 +76,9 @@
     <!-- MAIN APP WRAPPER -->
     <div id="mainApp" class="app-container flex flex-col justify-between hidden">
         <div>
-            <!-- Header (with Logout Button) -->
+            <!-- Header -->
             <div class="bg-navyPrimary text-center py-4 px-3 shadow-md rounded-b-2xl mb-3 relative overflow-hidden flex items-center justify-between">
-                <div class="w-8"></div> <!-- Spacer for center alignment -->
+                <div class="w-8"></div> 
                 <div>
                     <h1 class="text-white text-[13px] font-extrabold tracking-widest uppercase">INDEPENDENCE HOTEL</h1>
                     <p class="text-slate-300 text-[10px] mt-0.5 font-semibold tracking-wider">F&B DAILY REVENUE</p>
@@ -160,16 +160,14 @@
             </form>
         </div>
 
-        <!-- 3. SLIDE TO CONFIRM FOOTER -->
+        <!-- SLIDE TO CONFIRM FOOTER -->
         <div class="fixed bottom-0 left-0 w-full p-4 z-20 pointer-events-none">
             <div class="max-w-[430px] mx-auto bg-white/95 backdrop-blur-md border border-slate-200 p-2 shadow-2xl rounded-2xl pointer-events-auto">
                 <div id="sliderTrack" class="relative h-14 bg-slate-100 rounded-xl overflow-hidden border border-slate-200/80">
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <span id="sliderText" class="text-[11px] font-extrabold text-slate-400 tracking-widest uppercase transition-opacity duration-300">Slide to Submit <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i><i class="fa-solid fa-chevron-right text-[10px]"></i></span>
                     </div>
-                    <!-- Slider Fill -->
                     <div id="sliderFill" class="absolute top-0 left-0 bottom-0 bg-navyPrimary/10 w-0"></div>
-                    <!-- Slider Thumb -->
                     <div id="sliderThumb" class="absolute top-1 left-1 bottom-1 w-16 bg-navyPrimary rounded-lg flex items-center justify-center cursor-pointer touch-none z-10 text-white shadow-md hover:bg-navyDark transition-colors">
                         <i id="thumbIcon" class="fa-solid fa-angles-right text-lg"></i>
                     </div>
@@ -178,7 +176,7 @@
         </div>
     </div>
 
-    <!-- 3. LOADING OVERLAY (3 STEPS) -->
+    <!-- LOADING OVERLAY -->
     <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[110] flex items-center justify-center p-5 hidden animate-fade">
         <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl text-center space-y-6">
             <div>
@@ -186,29 +184,23 @@
                 <p id="loadingSub" class="text-xs text-slate-500 font-medium">Please do not close the app...</p>
             </div>
             
-            <!-- Progress Tracker -->
             <div class="relative px-2">
-                <!-- Background Line -->
                 <div class="absolute top-3.5 left-8 right-8 h-1 bg-slate-100 rounded-full -z-10"></div>
-                <!-- Animated Fill Line -->
                 <div id="progressLine" class="absolute top-3.5 left-8 h-1 bg-emerald-500 rounded-full -z-10 w-0 transition-all duration-700 ease-in-out"></div>
                 
                 <div class="flex items-center justify-between">
-                    <!-- Step 1 -->
                     <div class="flex flex-col items-center">
                         <div id="step1Icon" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xs transition-all duration-300 border-2 border-white shadow-sm">
                             <i class="fa-solid fa-paper-plane"></i>
                         </div>
                         <span class="text-[10px] mt-2 font-bold text-slate-500">Sent</span>
                     </div>
-                    <!-- Step 2 -->
                     <div class="flex flex-col items-center">
                         <div id="step2Icon" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xs transition-all duration-300 border-2 border-white shadow-sm">
                             <i class="fa-solid fa-gears"></i>
                         </div>
                         <span class="text-[10px] mt-2 font-bold text-slate-500">Processed</span>
                     </div>
-                    <!-- Step 3 -->
                     <div class="flex flex-col items-center">
                         <div id="step3Icon" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xs transition-all duration-300 border-2 border-white shadow-sm">
                             <i class="fa-solid fa-check-double"></i>
@@ -233,10 +225,10 @@
             if (name && phone) {
                 loginScreen.classList.add('hidden');
                 mainApp.classList.remove('hidden');
-                reportBy.value = `${name} (${phone})`; // Auto-fill
+                reportBy.value = `${name} (${phone})`;
                 displayUser.innerText = `👤 ${name}`;
                 document.getElementById('businessDate').valueAsDate = new Date();
-                initSlider(); // Recalculate slider width when app shows
+                initSlider(); 
             } else {
                 loginScreen.classList.remove('hidden');
                 mainApp.classList.add('hidden');
@@ -264,9 +256,7 @@
             }
         });
 
-        // Initialize Auth
         checkAuth();
-
 
         // --- 2. SLIDE TO CONFIRM LOGIC ---
         const track = document.getElementById('sliderTrack');
@@ -280,13 +270,12 @@
         let isSubmitted = false;
 
         function initSlider() {
-            maxSlide = track.offsetWidth - thumb.offsetWidth - 8; // 8px for margins
+            maxSlide = track.offsetWidth - thumb.offsetWidth - 8; 
         }
         window.addEventListener('resize', initSlider);
 
         function startDrag(e) {
             if (isSubmitted) return;
-            // Validate form before allowing slide
             const form = document.getElementById('revenueForm');
             if (!form.checkValidity()) {
                 form.reportValidity();
@@ -304,7 +293,6 @@
             if (!isDragging || isSubmitted) return;
             
             if (e.type.includes('touch')) {
-                // Prevent scrolling while sliding on mobile
                 e.preventDefault(); 
             }
 
@@ -317,18 +305,16 @@
             thumb.style.transform = `translateX(${walk}px)`;
             fill.style.width = `${walk + (thumb.offsetWidth/2)}px`;
 
-            // If slided all the way to the right
             if (walk >= maxSlide - 2) {
                 isDragging = false;
                 isSubmitted = true;
-                processSubmission(); // Trigger submit
+                processSubmission(); 
             }
         }
 
         function endDrag() {
             if (!isDragging || isSubmitted) return;
             isDragging = false;
-            // Snap back to start
             thumb.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
             fill.style.transition = 'width 0.3s ease';
             thumb.style.transform = `translateX(0px)`;
@@ -336,26 +322,21 @@
             sliderText.style.opacity = '1';
         }
 
-        // Mouse Events
         thumb.addEventListener('mousedown', startDrag);
         document.addEventListener('mousemove', dragMove);
         document.addEventListener('mouseup', endDrag);
 
-        // Touch Events
         thumb.addEventListener('touchstart', startDrag, {passive: true});
         document.addEventListener('touchmove', dragMove, {passive: false}); 
         document.addEventListener('touchend', endDrag);
 
-
         // --- 3. SUBMISSION & LOADING OVERLAY LOGIC ---
         function processSubmission() {
-            // Change Slider UI to locked/success state
             thumb.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg text-navyPrimary"></i>';
             thumb.classList.replace('bg-navyPrimary', 'bg-white');
             sliderText.innerText = "PROCESSING...";
             sliderText.style.opacity = '1';
 
-            // Gather Data
             const data = {
                 outlet: document.getElementById('outlet').value,
                 totalFbRevenue: document.getElementById('totalFbRevenue').value,
@@ -364,22 +345,18 @@
                 dayPassChild: document.getElementById('dayPassChild').value || 0,
                 otherPromotions: document.getElementById('otherPromotions').value || "-",
                 generalNotices: document.getElementById('generalNotices').value || "-",
-                reportBy: document.getElementById('reportBy').value, // Used auto-filled value
+                reportBy: document.getElementById('reportBy').value, 
                 businessDate: document.getElementById('businessDate').value
             };
 
-            // Show Overlay
             const overlay = document.getElementById('loadingOverlay');
             overlay.classList.remove('hidden');
 
-            // --- ANIMATION SEQUENCE ---
-            // Step 1: Sent (0ms)
             document.getElementById('step1Icon').classList.add('step-active');
             
             // Call Google Script
             google.script.run
                 .withSuccessHandler(function(response) {
-                    // Step 1 Done, Step 2 Active
                     document.getElementById('step1Icon').classList.replace('step-active', 'step-done');
                     document.getElementById('step1Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
                     
@@ -387,9 +364,7 @@
                     document.getElementById('step2Icon').classList.add('step-active');
                     document.getElementById('loadingSub').innerText = "Updating Database & Telegram...";
 
-                    // Fake delay to show Step 2 UI gracefully
                     setTimeout(() => {
-                        // Step 2 Done, Step 3 Active (Completed)
                         document.getElementById('step2Icon').classList.replace('step-active', 'step-done');
                         document.getElementById('step2Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
                         
@@ -400,7 +375,6 @@
                         document.getElementById('loadingTitle').classList.replace('text-navyDark', 'text-emerald-500');
                         document.getElementById('loadingSub').innerText = "Report submitted securely.";
 
-                        // Refresh App
                         setTimeout(() => {
                             window.location.reload();
                         }, 2000);
@@ -408,9 +382,9 @@
                 })
                 .withFailureHandler(function(error) {
                     alert("Error: " + error.message);
-                    window.location.reload(); // Reset on error
+                    window.location.reload(); 
                 })
-                .processForm(data); // Hitting the backend processForm
+                .processForm(data); 
         }
     </script>
 </body>
