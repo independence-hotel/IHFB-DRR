@@ -30,12 +30,16 @@
         .animate-fade { animation: fadeIn 0.3s ease forwards; }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-slide-up { animation: slideUp 0.4s ease forwards; }
-        @keyframes pulseGlow {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            50% { transform: scale(1.1); box-shadow: 0 0 10px 4px rgba(16, 185, 129, 0.2); }
+
+        /* Step Active Pulse (Navy & Light Blue Glow) */
+        @keyframes navyLightPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(27, 54, 93, 0.5), 0 0 0 0 rgba(56, 189, 248, 0.4); background-color: #1B365D; color: #38BDF8; }
+            50% { transform: scale(1.15); box-shadow: 0 0 15px 6px rgba(56, 189, 248, 0.7); background-color: #0A192F; color: #38BDF8; }
         }
-        .step-active { animation: pulseGlow 1.5s infinite; background-color: #10B981 !important; color: white !important; }
-        .step-done { background-color: #10B981 !important; color: white !important; }
+        .step-active { animation: navyLightPulse 1.2s infinite ease-in-out; border-color: #38BDF8 !important; }
+        
+        /* Completed Green Tick Style */
+        .step-done { background-color: #10B981 !important; color: white !important; border-color: #059669 !important; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
 
         @keyframes arrowChase {
             0% { opacity: 0.3; transform: translateX(-3px); }
@@ -46,11 +50,6 @@
         .chase-arrow-2 { animation: arrowChase 1.2s infinite ease-in-out 0.3s; }
         .chase-arrow-3 { animation: arrowChase 1.2s infinite ease-in-out 0.6s; }
 
-        @keyframes navyLightPulse {
-            0% { box-shadow: 0 0 0 0 rgba(27, 54, 93, 0.4); border-color: #1B365D; }
-            50% { box-shadow: 0 0 15px 4px rgba(56, 189, 248, 0.6); border-color: #38BDF8; }
-            100% { box-shadow: 0 0 0 0 rgba(27, 54, 93, 0.4); border-color: #1B365D; }
-        }
         .slider-pulse-effect { animation: navyLightPulse 2s infinite; }
     </style>
 </head>
@@ -130,18 +129,18 @@
                             </div>
                             <div>
                                 <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Total Pax *</label>
-                                <input type="number" id="totalPax" placeholder="0" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary focus:outline-none focus:ring-1 focus:ring-navyPrimary">
+                                <input type="number" step="1" min="0" id="totalPax" placeholder="0" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary focus:outline-none focus:ring-1 focus:ring-navyPrimary">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-2.5 bg-blue-50/70 p-2.5 rounded-lg border border-blue-200">
                             <div>
                                 <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Day Pass Adult</label>
-                                <input type="number" id="dayPassAdult" placeholder="0" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary">
+                                <input type="number" step="1" min="0" id="dayPassAdult" placeholder="0" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary">
                             </div>
                             <div>
                                 <label class="text-[11px] text-navyPrimary font-extrabold uppercase tracking-wider mb-1 block">Day Pass Child</label>
-                                <input type="number" id="dayPassChild" placeholder="0" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary">
+                                <input type="number" step="1" min="0" id="dayPassChild" placeholder="0" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-navyPrimary">
                             </div>
                         </div>
 
@@ -191,8 +190,57 @@
         </div>
     </div>
 
+    <!-- PREVIEW CONFIRMATION MODAL (ATTENTION) -->
+    <div id="previewModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[115] flex items-center justify-center p-5 hidden animate-fade">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4 animate-slide-up">
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-2 text-amber-500">
+                    <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                </div>
+                <h3 class="font-extrabold text-base text-navyDark uppercase tracking-wider">Please Verify Report</h3>
+                <p class="text-xs text-amber-600 font-bold">⚠️ ATTENTION: Please review your data carefully before final submission!</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 text-xs space-y-2 font-medium text-slate-700">
+                <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                    <span class="text-slate-500 font-bold">Date:</span>
+                    <span id="prevDate" class="font-bold text-navyPrimary"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                    <span class="text-slate-500 font-bold">Outlet:</span>
+                    <span id="prevOutlet" class="font-bold text-navyPrimary"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                    <span class="text-slate-500 font-bold">Revenue:</span>
+                    <span id="prevRevenue" class="font-bold text-emerald-600"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                    <span class="text-slate-500 font-bold">Total Pax:</span>
+                    <span id="prevPax" class="font-bold text-navyPrimary"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                    <span class="text-slate-500 font-bold">Day Pass (A / C):</span>
+                    <span id="prevDayPass" class="font-bold text-navyPrimary"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500 font-bold">Reporter:</span>
+                    <span id="prevReporter" class="font-bold text-navyPrimary"></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-1">
+                <button id="cancelSubmitBtn" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 py-3 rounded-xl text-xs font-extrabold uppercase transition-all">
+                    Cancel
+                </button>
+                <button id="confirmSubmitBtn" class="w-full bg-navyPrimary hover:bg-navyDark text-white py-3 rounded-xl text-xs font-extrabold uppercase tracking-wider shadow-md transition-all">
+                    Confirm & Submit
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- LOADING OVERLAY -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[110] flex items-center justify-center p-5 hidden animate-fade">
+    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[120] flex items-center justify-center p-5 hidden animate-fade">
         <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl text-center space-y-6">
             <div>
                 <h3 id="loadingTitle" class="font-extrabold text-sm text-navyDark uppercase tracking-wider mb-1">Processing Request</h3>
@@ -324,7 +372,7 @@
             if (walk >= maxSlide - 2) {
                 isDragging = false;
                 isSubmitted = true;
-                processSubmission(); 
+                showPreviewModal(); 
             }
         }
 
@@ -345,6 +393,36 @@
         thumb.addEventListener('touchstart', startDrag, {passive: true});
         document.addEventListener('touchmove', dragMove, {passive: false}); 
         document.addEventListener('touchend', endDrag);
+
+        function showPreviewModal() {
+            document.getElementById('prevDate').innerText = document.getElementById('businessDate').value;
+            document.getElementById('prevOutlet').innerText = document.getElementById('outlet').value;
+            document.getElementById('prevRevenue').innerText = "$ " + Number(document.getElementById('totalFbRevenue').value).toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('prevPax').innerText = document.getElementById('totalPax').value;
+            document.getElementById('prevDayPass').innerText = `${document.getElementById('dayPassAdult').value || 0} Adult / ${document.getElementById('dayPassChild').value || 0} Child`;
+            document.getElementById('prevReporter').innerText = document.getElementById('reportBy').value;
+
+            document.getElementById('previewModal').classList.remove('hidden');
+        }
+
+        document.getElementById('cancelSubmitBtn').addEventListener('click', () => {
+            document.getElementById('previewModal').classList.add('hidden');
+            resetSliderState();
+        });
+
+        document.getElementById('confirmSubmitBtn').addEventListener('click', () => {
+            document.getElementById('previewModal').classList.add('hidden');
+            processSubmission();
+        });
+
+        function resetSliderState() {
+            isSubmitted = false;
+            thumb.innerHTML = '<i class="fa-solid fa-angles-right text-lg text-lightBlueGlow"></i>';
+            thumb.classList.replace('bg-white', 'bg-navyPrimary');
+            thumb.style.transform = 'translateX(0px)';
+            fill.style.width = '0px';
+            sliderText.style.opacity = '1';
+        }
 
         function processSubmission() {
             thumb.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg text-lightBlueGlow"></i>';
@@ -378,6 +456,7 @@
             .then(response => response.json())
             .then(result => {
                 if(result.status === 'success') {
+                    // Step 1 Completed
                     document.getElementById('step1Icon').classList.replace('step-active', 'step-done');
                     document.getElementById('step1Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
                     
@@ -386,19 +465,27 @@
                     document.getElementById('loadingSub').innerText = "Updating Database & Telegram...";
 
                     setTimeout(() => {
+                        // Step 2 Completed
                         document.getElementById('step2Icon').classList.replace('step-active', 'step-done');
                         document.getElementById('step2Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
                         
                         document.getElementById('progressLine').style.width = '100%';
-                        document.getElementById('step3Icon').classList.add('step-done');
+                        // Step 3 Active (Navy & Light Blue Pulse)
+                        document.getElementById('step3Icon').classList.add('step-active');
                         
-                        document.getElementById('loadingTitle').innerText = "SUCCESSFUL!";
-                        document.getElementById('loadingTitle').classList.replace('text-navyDark', 'text-emerald-500');
-                        document.getElementById('loadingSub').innerText = "Report submitted securely. Refreshing in 5s.";
-
                         setTimeout(() => {
-                            window.location.reload();
-                        }, 5000);
+                            // Step 3 Completed (Green Tick)
+                            document.getElementById('step3Icon').classList.replace('step-active', 'step-done');
+                            document.getElementById('step3Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
+
+                            document.getElementById('loadingTitle').innerText = "SUCCESSFUL!";
+                            document.getElementById('loadingTitle').classList.replace('text-navyDark', 'text-emerald-500');
+                            document.getElementById('loadingSub').innerText = "Report submitted securely. Refreshing in 5s...";
+
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 5000);
+                        }, 1000);
                     }, 1200);
                 } else {
                     throw new Error(result.message);
