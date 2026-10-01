@@ -409,7 +409,7 @@
 
             // Validate integers for Pax & Day Pass
             if (!validateInputs()) {
-                alert("⚠️ Please enter whole numbers (integer only) for Total Pax and Day Pass fields. No decimals allowed!");
+                alert("⚠️️ Please enter whole numbers (integer only) for Total Pax and Day Pass fields. No decimals allowed!");
                 return;
             }
             
@@ -523,33 +523,27 @@
             .then(response => response.json())
             .then(result => {
                 if(result.status === 'success') {
+                    // ១. ប្ដូរជំហានទី១ (Sent) ទៅជាសញ្ញាធីក
                     document.getElementById('step1Icon').classList.replace('step-active', 'step-done');
                     document.getElementById('step1Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
                     
-                    document.getElementById('progressLine').style.width = '50%';
-                    document.getElementById('step2Icon').classList.add('step-active');
-                    document.getElementById('loadingSub').innerText = "Updating Database & Telegram...";
-
+                    // ២. រង់ចាំបន្តិច រួចលោតបង្ហាញជំហានទី២ (Completed ជាមួយរូបនាឡិកាវិលទៅជាធីក២)
                     setTimeout(() => {
-                        document.getElementById('step2Icon').classList.replace('step-active', 'step-done');
-                        document.getElementById('step2Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
+                        document.getElementById('finalIcon').className = 'fa-solid fa-check-double text-emerald-500';
+                        document.getElementById('step2Text').innerText = 'Completed';
+                        document.getElementById('step2Text').className = 'text-[11px] font-extrabold text-emerald-500 tracking-wide';
+                        document.getElementById('step2Icon').className = 'w-11 h-11 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-base transition-all duration-200 border-2 border-emerald-400 shadow-md';
                         
-                        document.getElementById('progressLine').style.width = '100%';
-                        document.getElementById('step3Icon').classList.add('step-active');
+                        document.getElementById('loadingTitle').classList.add('text-emerald-500');
+                        document.getElementById('loadingTitle').classList.remove('text-navyDark');
+                        document.getElementById('loadingSub').innerText = "Data processed successfully. Refreshing...";
                         
+                        // ៣. Reload ទំព័រវិញបន្ទាប់ពីបង្ហាញជោគជ័យរួចរាល់
                         setTimeout(() => {
-                            document.getElementById('step3Icon').classList.replace('step-active', 'step-done');
-                            document.getElementById('step3Icon').innerHTML = '<i class="fa-solid fa-check"></i>';
-
-                            document.getElementById('loadingTitle').innerText = "SUCCESSFUL!";
-                            document.getElementById('loadingTitle').classList.replace('text-navyDark', 'text-emerald-500');
-                            document.getElementById('loadingSub').innerText = "Report submitted securely. Refreshing in 5s...";
-
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 5000);
-                        }, 1000);
-                    }, 1200);
+                            window.location.reload(); 
+                        }, 2500);
+                        
+                    }, 600);
                 } else {
                     throw new Error(result.message);
                 }
