@@ -38,14 +38,19 @@
         .step-active { animation: navyLightPulse 1.2s infinite ease-in-out; border-color: #38BDF8 !important; }
         .step-done { background-color: #10B981 !important; color: white !important; border-color: #059669 !important; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
 
+        /* ─── អាប់ដេត CSS ព្រួញប្រដេញ ៧ គ្រាប់ ─── */
         @keyframes arrowChase {
-            0% { opacity: 0.3; transform: translateX(-3px); }
+            0% { opacity: 0.2; transform: translateX(-2px); }
             50% { opacity: 1; color: #38BDF8; transform: translateX(3px); }
-            100% { opacity: 0.3; transform: translateX(-3px); }
+            100% { opacity: 0.2; transform: translateX(-2px); }
         }
-        .chase-arrow-1 { animation: arrowChase 1.2s infinite ease-in-out; }
-        .chase-arrow-2 { animation: arrowChase 1.2s infinite ease-in-out 0.3s; }
-        .chase-arrow-3 { animation: arrowChase 1.2s infinite ease-in-out 0.6s; }
+        .chase-arrow-1 { animation: arrowChase 1.5s infinite ease-in-out 0.0s; }
+        .chase-arrow-2 { animation: arrowChase 1.5s infinite ease-in-out 0.2s; }
+        .chase-arrow-3 { animation: arrowChase 1.5s infinite ease-in-out 0.4s; }
+        .chase-arrow-4 { animation: arrowChase 1.5s infinite ease-in-out 0.6s; }
+        .chase-arrow-5 { animation: arrowChase 1.5s infinite ease-in-out 0.8s; }
+        .chase-arrow-6 { animation: arrowChase 1.5s infinite ease-in-out 1.0s; }
+        .chase-arrow-7 { animation: arrowChase 1.5s infinite ease-in-out 1.2s; }
 
         .slider-pulse-effect { animation: navyLightPulse 2s infinite; }
     </style>
@@ -248,58 +253,59 @@
         </div>
     </div>
 
- <!-- LOADING OVERLAY -->
-<div id="loadingOverlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[120] flex items-center justify-center p-4 hidden animate-fade">
-    <div class="bg-white rounded-3xl w-full max-w-[370px] shadow-2xl overflow-hidden border border-slate-100 animate-slide-up">
-        <div class="px-6 pt-8 pb-8 text-center space-y-6">
-            <!-- Titles -->
-            <div>
-                <h3 id="loadingTitle" class="font-extrabold text-[18px] text-navyDark uppercase tracking-wide leading-tight transition-colors duration-200">
-                    PROCESSING REQUEST
-                </h3>
-                <p id="loadingSub" class="text-slate-400 text-[13px] font-medium mt-2">
-                    Please do not close the app...
-                </p>
-            </div>
-            
-            <!-- Hidden progressLine ទុកដើម្បីកុំឲ្យ Error កូដ JS ចាស់ -->
-            <div id="progressLine" class="hidden"></div>
-            
-            <!-- Step Indicators (2 Steps Only) -->
-            <div class="w-full px-8 pt-2 pb-1"> <!-- ប្រើ px-8 ដើម្បីបង្រួញគម្លាតអោយសមនឹងទម្រង់ ២ ជំហាន -->
-                <div class="flex items-start justify-between w-full">
-                    
-                    <!-- Step 1: Sent -->
-                    <div class="flex flex-col items-center space-y-2 flex-1">
-                        <div id="step1Icon" class="w-11 h-11 rounded-full bg-slate-100 text-slate-300 flex items-center justify-center text-base transition-all duration-200 border-2 border-slate-200">
-                            <i class="fa-solid fa-paper-plane"></i>
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[120] flex items-center justify-center p-4 hidden animate-fade">
+        <div class="bg-white rounded-3xl w-full max-w-[370px] shadow-2xl overflow-hidden border border-slate-100 animate-slide-up">
+            <div class="px-6 pt-8 pb-8 text-center space-y-6">
+                <!-- Titles -->
+                <div>
+                    <h3 id="loadingTitle" class="font-extrabold text-[18px] text-navyDark uppercase tracking-wide leading-tight transition-colors duration-200">
+                        PROCESSING REQUEST
+                    </h3>
+                    <p id="loadingSub" class="text-slate-400 text-[13px] font-medium mt-2">
+                        Please do not close the app...
+                    </p>
+                </div>
+                
+                <!-- Hidden progressLine ទុកដើម្បីកុំឲ្យ Error កូដ JS ចាស់ -->
+                <div id="progressLine" class="hidden"></div>
+                
+                <!-- Step Indicators (2 Steps Only with 7 Arrows) -->
+                <div class="w-full px-8 pt-2 pb-1">
+                    <div class="flex items-start justify-between w-full">
+                        
+                        <!-- Step 1: Sent -->
+                        <div class="flex flex-col items-center space-y-2 flex-1">
+                            <div id="step1Icon" class="w-11 h-11 rounded-full bg-slate-100 text-slate-300 flex items-center justify-center text-base transition-all duration-200 border-2 border-slate-200">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </div>
+                            <span id="step1Text" class="text-[11px] font-bold text-slate-400 tracking-wide">Sent</span>
                         </div>
-                        <span id="step1Text" class="text-[11px] font-bold text-slate-400 tracking-wide">Sent</span>
-                    </div>
-                    
-                    <!-- Arrows -->
-                    <div class="flex items-center justify-center space-x-[-3px] flex-[1.5] mt-[14px]">
-                        <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-1"></i>
-                        <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-2"></i>
-                        <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-3"></i>
-                        <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-1"></i>
-                        <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-2"></i>
-                    </div>
-                    
-                    <!-- Step 2: Pending / Completed -->
-                    <div class="flex flex-col items-center space-y-2 flex-1">
-                        <div id="step2Icon" class="w-11 h-11 rounded-full bg-slate-100 text-slate-300 flex items-center justify-center text-base transition-all duration-200 border-2 border-slate-200">
-                            <!-- ដើមឡើយបង្ហាញនាឡិកាវិលជា Pending -->
-                            <i id="finalIcon" class="fa-regular fa-clock fa-spin"></i>
+                        
+                        <!-- ─── អាប់ដេត HTML ព្រួញប្រដេញ ៧ គ្រាប់ ─── -->
+                        <div class="flex items-center justify-center space-x-[-2px] flex-[2] mt-[14px]">
+                            <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-1"></i>
+                            <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-2"></i>
+                            <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-3"></i>
+                            <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-4"></i>
+                            <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-5"></i>
+                            <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-6"></i>
+                            <i class="fa-solid fa-chevron-right text-slate-300 text-[12px] chase-arrow-7"></i>
                         </div>
-                        <span id="step2Text" class="text-[11px] font-bold text-slate-400 tracking-wide">Pending</span>
-                    </div>
+                        
+                        <!-- Step 2: Pending / Completed -->
+                        <div class="flex flex-col items-center space-y-2 flex-1">
+                            <div id="step2Icon" class="w-11 h-11 rounded-full bg-slate-100 text-slate-300 flex items-center justify-center text-base transition-all duration-200 border-2 border-slate-200">
+                                <i id="finalIcon" class="fa-regular fa-clock fa-spin"></i>
+                            </div>
+                            <span id="step2Text" class="text-[11px] font-bold text-slate-400 tracking-wide">Pending</span>
+                        </div>
 
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <script>
         const loginScreen = document.getElementById('loginScreen');
@@ -409,7 +415,7 @@
 
             // Validate integers for Pax & Day Pass
             if (!validateInputs()) {
-                alert("⚠️️ Please enter whole numbers (integer only) for Total Pax and Day Pass fields. No decimals allowed!");
+                alert("⚠️ Please enter whole numbers (integer only) for Total Pax and Day Pass fields. No decimals allowed!");
                 return;
             }
             
@@ -513,6 +519,7 @@
             overlay.classList.remove('hidden');
             document.getElementById('step1Icon').classList.add('step-active');
             
+            // កុំភ្លេចប្ដូរ WEB_APP_URL នេះជា URL ពិតប្រាកដរបស់អ្នកវិញ ពេល Go Live
             const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyFPuWZ6JPo21hjNDjDxT7fUqrFuqOSa1RZdS5MZZ7UvKUJHd93tukxH_j_7WtrpuKf/exec";
 
             fetch(WEB_APP_URL, {
